@@ -1,4 +1,7 @@
 import Controller.SocialMediaController;
+import DAO.MessageDAO;
+import Model.Message;
+import Service.MessageService;
 import io.javalin.Javalin;
 
 /**
@@ -7,8 +10,10 @@ import io.javalin.Javalin;
  */
 public class Main {
     public static void main(String[] args) {
-        SocialMediaController controller = new SocialMediaController();
-        Javalin app = controller.startAPI();
-        app.start(8080);
+        MessageService messageService = new MessageService();
+        System.out.println(messageService.getAllMessagesByUserID(2).isEmpty());
+        // SocialMediaController controller = new SocialMediaController();
+        // Javalin app = controller.startAPI();
+        // app.start(8080);
     }
 }
