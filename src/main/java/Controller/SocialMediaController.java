@@ -43,7 +43,7 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
         app.get("/messages", this::getAllMessagesHandler);
-        app.get("/accounts/{account_id}/messages", this::getAllMessagesHandler);
+        app.get("/accounts/{account_id}/messages", this::getAllMessagesByUserIDHandler);
         app.get("/messages/{message_id}", this::getMessageHandler);
         app.delete("/messages/{message_id}", this::deleteMessageHandler);
         app.patch("/messages/{message_id}/", this::updateMessageHandler);
@@ -142,15 +142,10 @@ public class SocialMediaController {
     public void getAllMessagesByUserIDHandler(Context context) {
         int account_id = context.pathParamAsClass("account_id", Integer.class).get();
         List<Message> messages = messageService.getAllMessagesByUserID(account_id);
-
-        if (messages.isEmpty()) {
-            context.status(200).json(new ArrayList<>()); 
-        } else {
-            context.status(200).json(messages); 
-        }
+        context.status(200).json(messages);
     }
 
-    public void registerUser (Context context) throws JsonProcessingException{
+    public void registerUser(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(context.body(), Account.class);
         Account registeredAccount = accountService.registerUser(account);
@@ -161,7 +156,7 @@ public class SocialMediaController {
         }
     }
 
-    public void login (Context context) throws JsonProcessingException {
+    public void login(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(context.body(), Account.class);
         Account loggedAccount = accountService.login(account);
@@ -171,6 +166,7 @@ public class SocialMediaController {
             context.status(401);
         }
     }
+
     /**
      * This is an example handler for an example endpoint.
      * 
